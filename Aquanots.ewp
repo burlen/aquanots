@@ -1281,6 +1281,12 @@
   <file>
     <name>$PROJ_DIR$\tasks.c</name>
   </file>
+  <file>
+    <name>$PROJ_DIR$\timertick.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\timertick.h</name>
+  </file>
 </project>
 
 

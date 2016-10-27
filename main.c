@@ -33,6 +33,7 @@
 
 #include "consumption.h"
 #include "heartbeat.h"
+#include "timertick.h"
 // TODO -- this is just for testing and is not needed
 #include "data_access_layer.h"
 
@@ -78,6 +79,7 @@ void led_toggle(uint8_t led, uint16_t period);
 
 #define  HEART_PRIO             9       //Needs to be modified
 #define  CONS_PRIO              9       //Needs to be modified
+#define  TIMER_PRIO             10      //Needs to be modified
 
 // Allocate Task Stacks
 #define  TASK_STACK_SIZE      128
@@ -91,8 +93,9 @@ static CPU_STK  g_sw1_react_stack[TASK_STACK_SIZE];
 static CPU_STK  g_sw2_react_stack[TASK_STACK_SIZE];
 static CPU_STK  g_adc_stack[TASK_STACK_SIZE];
 static CPU_STK  g_alarm_stack[TASK_STACK_SIZE];
-static CPU_STK  g_heartbeat_stack[TASK_STACK_SIZE];
-static CPU_STK  g_consumption_stack[TASK_STACK_SIZE];
+static CPU_STK  g_heartbeat_stack[TASK_STACK_SIZE]; 
+static CPU_STK  g_consumption_stack[TASK_STACK_SIZE]; 
+static CPU_STK  g_timer_stack[TASK_STACK_SIZE];
 
 // Allocate Task Control Blocks
 static OS_TCB   g_startup_task_tcb;
@@ -103,8 +106,9 @@ static OS_TCB   g_sw1_react_tcb;
 static OS_TCB   g_sw2_react_tcb;
 static OS_TCB   g_adc_tcb;
 static OS_TCB   g_alarm_tcb;
-static OS_TCB   g_heartbeat_tcb;  //added by Robert
-static OS_TCB   g_consumption_tcb; //Added by Robert
+static OS_TCB   g_heartbeat_tcb;
+static OS_TCB   g_consumption_tcb;
+static OS_TCB   g_timer_tcb;
 
 // Mutex
 static OS_MUTEX g_led_mutex;
@@ -128,57 +132,6 @@ OS_FLAG_GRP g_alarm_flags;
 *********************************************************************************************************
 */
 
-void led_toggle(uint8_t led, uint16_t period)
-{
-    OS_ERR  err;
-      OSMutexPend(&g_led_mutex, 0, OS_OPT_PEND_BLOCKING, 0, &err);
-      assert(OS_ERR_NONE == err);
-
-      BSP_LED_Toggle(led);
-      OSMutexPost(&g_led_mutex, OS_OPT_POST_NONE, &err);
-      OSTimeDlyHMSM(0, 0, 0, period, OS_OPT_TIME_HMSM_STRICT, &err);
-}
-
-void
-led5_task (void * p_arg)
-{
-    //OS_ERR  err;
-
-
-    (void)p_arg;    // NOTE: Silence compiler warning about unused param.
-
-    for (;;)
-    {
-        // Flash LED at 1 Hz.
-      led_toggle(5, 500);
-//            OSMutexPend(&g_led_mutex, 0, OS_OPT_PEND_BLOCKING, 0, &err);
-//            assert(OS_ERR_NONE == err);
-//
-//	    BSP_LED_Toggle(5);
-//            OSMutexPost(&g_led_mutex, OS_OPT_POST_NONE, &err);
-//	    OSTimeDlyHMSM(0, 0, 0, 500, OS_OPT_TIME_HMSM_STRICT, &err);
-    }
-}
-
-void
-led7_task (void * p_arg)
-{
-    //OS_ERR  err;
-
-
-    (void)p_arg;    // NOTE: Silence compiler warning about unused param.
-
-    for (;;)
-    {
-        // Flash LED at 3 Hz.
-            led_toggle(6, 333);
-//            OSMutexPend(&g_led_mutex, 0, OS_OPT_PEND_BLOCKING, 0, &err);
-//            assert(OS_ERR_NONE == err);
-//	    BSP_LED_Toggle(6);
-//            OSMutexPost(&g_led_mutex, OS_OPT_POST_NONE, &err);
-//	    OSTimeDlyHMSM(0, 0, 0, 333, OS_OPT_TIME_HMSM_STRICT, &err);
-    }
-}
 
 void
 startup_task (void * p_arg)
@@ -215,6 +168,21 @@ startup_task (void * p_arg)
                  (void       *) 0,
                  (OS_PRIO     ) CONS_PRIO,
                  (CPU_STK    *)&g_consumption_stack[0],
+                 (CPU_STK_SIZE) TASK_STACK_SIZE / 10u,
+                 (CPU_STK_SIZE) TASK_STACK_SIZE ,
+                 (OS_MSG_QTY  ) 0u,
+                 (OS_TICK     ) 0u,
+                 (void       *) 0,
+                 (OS_OPT      ) 0,
+                 (OS_ERR     *)&err);
+    assert(OS_ERR_NONE == err);
+    
+    OSTaskCreate((OS_TCB     *)&g_timer_tcb,
+                 (CPU_CHAR   *)"Timer Task",
+                 (OS_TASK_PTR ) timer_tick,
+                 (void       *) 0,
+                 (OS_PRIO     ) TIMER_PRIO,
+                 (CPU_STK    *)&g_timer_stack[0],
                  (CPU_STK_SIZE) TASK_STACK_SIZE / 10u,
                  (CPU_STK_SIZE) TASK_STACK_SIZE ,
                  (OS_MSG_QTY  ) 0u,
