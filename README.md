@@ -1,2 +1,9 @@
 = AquaNOts =
-capstone projevct barr group course
+capstone project barr group course
+
+  Berlin
+  Robert
+  Hitesh
+  Mark
+  
+  
