@@ -21,6 +21,14 @@ typedef struct
 data_access_layer_t;
 
 data_access_layer *g_dal = NULL;
+typedef enum
+{
+  UNITS_METRIC=0,
+  UNITS_US
+}
+units_toggle_t;
+
+data_access_layer_t *g_dal = NULL;
 
 // constructor
 data_access_layer_t *new_data_access_layer();
@@ -62,8 +70,10 @@ uint32_t dal_get_depth();
 
 // set/get the current air volume
 // units of millileters
+// units of milliliters
 void dal_set_air_volume(uint16_t val);
 uint16_t dal_get_air_volume();
+void dal_add_air_volume_in_Millilitres(uint32_t volume);
 
 // set/get the debug flag state
 void dal_set_debug(uint8_t val);
