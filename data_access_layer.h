@@ -44,6 +44,15 @@ typedef struct
 }
 data_access_layer_t;
 
+
+typedef enum
+{
+  UNITS_METRIC=0,
+  UNITS_US
+}
+units_toggle_t;
+
+
 // constructor
 data_access_layer_t *new_data_access_layer();
 
@@ -100,10 +109,12 @@ int wait_depth_change();
 
 // set/get the current air volume
 // units of millileters
+// units of milliliters
 void dal_set_air_volume(uint16_t val);
 // block unit the value has changed, return 0 on success
 // -1 on error
 uint16_t dal_get_air_volume();
+void dal_add_air_volume_in_Millilitres(uint32_t volume);
 
 // block unit the value has changed, return 0 on success
 // -1 on error
