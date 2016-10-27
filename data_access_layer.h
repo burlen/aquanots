@@ -4,64 +4,12 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdio.h>
-
 #include <os.h>
 
-// structure for shared data, a singleton instance, and
-// set/get api
-typedef struct
-{
-    OS_SEM any_sem;
-    OS_MUTEX all_mut;
-
-    uint32_t tick;
-    OS_MUTEX tick_mut;
-    OS_SEM tick_sem;
-
-    uint8_t alarm;
-    OS_MUTEX alarm_mut;
-    OS_SEM alarm_sem;
-
-    uint8_t units_toggle;
-    OS_MUTEX units_toggle_mut;
-    OS_SEM units_toggle_sem;
-
-    uint32_t depth;
-    OS_MUTEX depth_mut;
-    OS_SEM depth_sem;
-
-    uint16_t depth_rate;
-    OS_MUTEX depth_rate_mut;
-    OS_SEM depth_rate_sem;
-
-    uint16_t air_volume;
-    OS_MUTEX air_volume_mut;
-    OS_SEM air_volume_sem;
-
-    const char *brand_name;
-    OS_MUTEX brand_name_mut;
-    OS_SEM brand_name_sem;
-
-    uint8_t debug;
-    OS_MUTEX debug_mut;
-    OS_SEM debug_sem;
-}
-data_access_layer_t;
-
-
-typedef enum
-{
-  UNITS_METRIC=0,
-  UNITS_US
-}
-units_toggle_t;
-
-
-// constructor
-data_access_layer_t *new_data_access_layer();
-
-// destructor
-void free_data_access_layer();
+#define DANGEROUS_ASCENT_RATE_M_MIN (15)
+#define VOLUME_PER_CLICK_IN_MILLILITRES (5000)
+// initialize the dal
+void dal_intialize();
 
 // reset the data to initial values
 void dal_reset();
@@ -83,8 +31,12 @@ uint8_t dal_get_alarm(void);
 int wait_alarm_changed();
 
 // set/get the units
-#define DAL_UNITS_METRIC 0x01
-#define DAL_UNITS_US     0x02
+typedef enum
+{
+  DAL_UNITS_METRIC=0x1,
+  DAL_UNITS_US=0x2
+}
+units_toggle_t;
 void dal_set_units_toggle(uint8_t val);
 uint8_t dal_get_units_toggle();
 // block unit the value has changed, return 0 on success
@@ -97,6 +49,7 @@ const char *dal_get_brand_name();
 
 // set/get the depth rate
 // values are in units of meters/min
+// values are in units of +/- meters/min
 void dal_set_depth_rate(int16_t val);
 int16_t dal_get_depth_rate();
 // block unit the value has changed, return 0 on success
@@ -119,6 +72,7 @@ void dal_set_air_volume(uint16_t val);
 // -1 on error
 uint16_t dal_get_air_volume();
 void dal_add_air_volume_in_Millilitres(uint32_t volume);
+void dal_add_air_volume_in_Millilitres(uint32_t total_vol);
 
 // block unit the value has changed, return 0 on success
 // -1 on error

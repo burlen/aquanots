@@ -27,14 +27,15 @@ air_consumption (void * p_arg)
 
   OS_ERR  err;
   (void)p_arg;    // NOTE: Silence compiler warning about unused param.
-  uint16_t depth;
-  uint16_t volume;
   
-  depth = dal_get_depth();
-  volume = dal_get_air_volume();
-
-  for (;;)
+    for (;;)
   {
+    uint16_t depth;
+    uint16_t volume;
+    
+    depth = dal_get_depth();
+    volume = dal_get_air_volume();
+    
     if (depth == 0)
     {
       // No air is consumed.
@@ -51,8 +52,7 @@ air_consumption (void * p_arg)
       else
       {
         volume = 0;
-      }
-                
+      }    
 	  dal_set_air_volume(volume);
     }
     else
@@ -61,21 +61,20 @@ air_consumption (void * p_arg)
       assert(0);
     }
     
-    uint16_t max_air_depth;
+    uint16_t min_air_vol;
     //Get max 
-    max_air_depth = dal_get_tick();//gas_to_surface_in_cl(depth);
+    min_air_vol = gas_to_surface_in_cl(depth);
     
-    if (depth > max_air_depth)
+    if (volume > min_air_vol)
     {
       //Trigger high alarm
       OSFlagPost(&g_alarm_flags,
                  ALARM_HIGH,
                  OS_OPT_POST_FLAG_SET,
                  &err);
-          assert(OS_ERR_NONE == err);
+      assert(OS_ERR_NONE == err);
     }
-    
-    
+        
     //2Hz calc rate
     OSTimeDlyHMSM(0, 0, 0, 500, OS_OPT_TIME_HMSM_STRICT, &err);
   }

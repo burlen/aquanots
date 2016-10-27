@@ -11,19 +11,20 @@
 #include  "data_access_layer.h"
 
 void
-timer_tick (void * p_arg)
+display_refresh (void * p_arg)
 {
   
   OS_ERR	    err;
   
+  //Initialize some stuff here
+  
   for (;;)	
-    {
-      uint32_t tick;
-      tick = dal_get_tick();
-      ++tick;
-      dal_set_tick(tick);
+  {
+    //Put your display work here
+    
 
-      //1Hz cycle
-      OSTimeDlyHMSM(0, 0, 0, 1000, OS_OPT_TIME_HMSM_STRICT, &err);
-    }
+    
+    //10Hz cycle - OS delay
+      OSTimeDlyHMSM(0, 0, 0, 100, OS_OPT_TIME_HMSM_STRICT, &err);
+  }
 }

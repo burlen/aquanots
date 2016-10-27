@@ -1,84 +1,59 @@
 #include "data_access_layer.h"
+#include  <bsp_glcd.h> // for LCD
 
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
 
+
+// structure for shared data, a singleton instance, and
+// set/get api
+typedef struct
+{
+    OS_SEM any_sem;
+    OS_MUTEX all_mut;
+
+    uint32_t tick;
+    OS_MUTEX tick_mut;
+    OS_SEM tick_sem;
+
+    uint8_t alarm;
+    OS_MUTEX alarm_mut;
+    OS_SEM alarm_sem;
+
+    uint8_t units_toggle;
+    OS_MUTEX units_toggle_mut;
+    OS_SEM units_toggle_sem;
+
+    uint32_t depth;
+    OS_MUTEX depth_mut;
+    OS_SEM depth_sem;
+
+    uint16_t depth_rate;
+    OS_MUTEX depth_rate_mut;
+    OS_SEM depth_rate_sem;
+
+    uint16_t air_volume;
+    OS_MUTEX air_volume_mut;
+    OS_SEM air_volume_sem;
+
+    const char *brand_name;
+    OS_MUTEX brand_name_mut;
+    OS_SEM brand_name_sem;
+
+    uint8_t debug;
+    OS_MUTEX debug_mut;
+    OS_SEM debug_sem;
+}
+data_access_layer_t;
+
+// constructor
+data_access_layer_t *new_data_access_layer();
+
+// destructor
+void free_data_access_layer();
 // internal singleton
 data_access_layer_t *g_dal = NULL;
-
-
-// --------------------------------------------------------------------------
-data_access_layer_t *new_data_access_layer()
-{
-    data_access_layer_t *dal =
-        (data_access_layer_t*)malloc(sizeof(data_access_layer_t));
-
-    memset(dal, 0, sizeof(data_access_layer_t));
-
-    OS_ERR err;
-    OSSemCreate(&dal->any_sem, "any sem", 0, &err);
-    assert(OS_ERR_NONE == err);
-    OSMutexCreate(&dal->all_mut, "all mutex", &err);
-    assert(OS_ERR_NONE == err);
-
-    OSSemCreate(&dal->tick_sem, "tick_sem", 0, &err);
-    assert(OS_ERR_NONE == err);
-    OSMutexCreate(&dal->tick_mut, "tick_mutex", &err);
-    assert(OS_ERR_NONE == err);
-
-    OSSemCreate(&dal->alarm_sem, "alarm_sem", 0, &err);
-    assert(OS_ERR_NONE == err);
-    OSMutexCreate(&dal->alarm_mut, "alarm_mutex", &err);
-    assert(OS_ERR_NONE == err);
-
-    OSSemCreate(&dal->units_toggle_sem, "units_toggle_sem", 0, &err);
-    assert(OS_ERR_NONE == err);
-    OSMutexCreate(&dal->units_toggle_mut, "units_toggle_mutex", &err);
-    assert(OS_ERR_NONE == err);
-
-    OSSemCreate(&dal->depth_sem, "depth_sem", 0, &err);
-    assert(OS_ERR_NONE == err);
-    OSMutexCreate(&dal->depth_mut, "depth_mutex", &err);
-    assert(OS_ERR_NONE == err);
-
-    OSSemCreate(&dal->depth_rate_sem, "depth_rate_sem", 0, &err);
-    assert(OS_ERR_NONE == err);
-    OSMutexCreate(&dal->depth_rate_mut, "depth_rate_mutex", &err);
-    assert(OS_ERR_NONE == err);
-
-    OSSemCreate(&dal->air_volume_sem, "air_volume_sem", 0, &err);
-    assert(OS_ERR_NONE == err);
-    OSMutexCreate(&dal->air_volume_mut, "air_volume_mutex", &err);
-    assert(OS_ERR_NONE == err);
-
-    OSSemCreate(&dal->brand_name_sem, "brand_name_sem", 0, &err);
-    assert(OS_ERR_NONE == err);
-    OSMutexCreate(&dal->brand_name_mut, "brand_name_mutex", &err);
-    assert(OS_ERR_NONE == err);
-
-    OSSemCreate(&dal->debug_sem, "debug_sem", 0, &err);
-    assert(OS_ERR_NONE == err);
-    OSMutexCreate(&dal->debug_mut, "debug_mutex", &err);
-    assert(OS_ERR_NONE == err);
-
-    return dal;
-}
-
-// --------------------------------------------------------------------------
-void free_data_access_layer()
-{
-    // TODO -- this data structure's life time is infinite
-    // so this is alow priority
-}
-
-// --------------------------------------------------------------------------
-void dal_reset()
-{
-    data_access_layer_t *dal = g_dal;
-    // TODO -- call setters
-
-}
 
 // --------------------------------------------------------------------------
 int dal_signal_update(OS_SEM *sem)
@@ -107,6 +82,91 @@ int dal_mutex_release(OS_MUTEX *mut)
     return 0;
 }
 
+
+// --------------------------------------------------------------------------
+int dal_mutex_create(OS_MUTEX *mut, const char *name)
+{
+    OS_ERR err;
+    OSMutexCreate(mut, (char*)name, &err);
+    assert(OS_ERR_NONE == err);
+    return 0;
+}
+
+// --------------------------------------------------------------------------
+int dal_sem_create(OS_SEM *sem, const char *name)
+{
+    OS_ERR err;
+    OSSemCreate(sem, (char*)name, 0, &err);
+    assert(OS_ERR_NONE == err);
+    return 0;
+}
+
+
+// --------------------------------------------------------------------------
+data_access_layer_t *new_data_access_layer()
+{
+    data_access_layer_t *dal =
+        (data_access_layer_t*)malloc(sizeof(data_access_layer_t));
+
+    // initialize it all to zero
+    memset(dal, 0, sizeof(data_access_layer_t));
+
+    dal_sem_create(&dal->any_sem, "any_sem");
+    dal_mutex_create(&dal->all_mut, "all_mut");
+
+    dal_sem_create(&dal->tick_sem, "tick_sem");
+    dal_mutex_create(&dal->tick_mut, "tick_mutex");
+
+    dal_sem_create(&dal->alarm_sem, "alarm_sem");
+    dal_mutex_create(&dal->alarm_mut, "alarm_mutex");
+
+    dal_sem_create(&dal->units_toggle_sem, "units_toggle_sem");
+    dal_mutex_create(&dal->units_toggle_mut, "units_toggle_mutex");
+
+    dal_sem_create(&dal->depth_sem, "depth_sem");
+    dal_mutex_create(&dal->depth_mut, "depth_mutex");
+
+    dal_sem_create(&dal->depth_rate_sem, "depth_rate_sem");
+    dal_mutex_create(&dal->depth_rate_mut, "depth_rate_mutex");
+
+    dal_sem_create(&dal->air_volume_sem, "air_volume_sem");
+    dal_mutex_create(&dal->air_volume_mut, "air_volume_mutex");
+
+    dal_sem_create(&dal->brand_name_sem, "brand_name_sem");
+    dal_mutex_create(&dal->brand_name_mut, "brand_name_mutex");
+
+    dal_sem_create(&dal->debug_sem, "debug_sem");
+    dal_mutex_create(&dal->debug_mut, "debug_mutex");
+
+    return dal;
+}
+
+// --------------------------------------------------------------------------
+void free_data_access_layer()
+{
+    // TODO -- this data structure's life time is infinite
+    // so this is alow priority
+}
+
+// --------------------------------------------------------------------------
+void dal_initialize()
+{
+    if (!g_dal)
+        g_dal = new_data_access_layer();
+
+    dal_set_tick(0);
+    dal_set_alarm(0);
+    dal_set_units_toggle(0);
+    dal_set_depth(0);
+    dal_set_depth_rate(0);
+    dal_set_air_volume(0);
+    dal_set_brand_name("aquanots");
+    dal_set_debug(0);
+}
+
+// --------------------------------------------------------------------------
+void dal_reset()
+{ dal_initialize(); }
 
 // --------------------------------------------------------------------------
 void dal_set_tick(uint32_t val)
@@ -183,6 +243,13 @@ const char *dal_get_brand_name()
 // --------------------------------------------------------------------------
 void dal_set_depth_rate(int16_t val)
 {
+#ifdef DISPLAY_DEBUG
+  {
+    char msg[32];
+    sprintf(&msg[0], "depth: %4i", val);
+    BSP_GraphLCD_String(0, (const char *)&msg);
+  }
+#endif
 }
 
 
@@ -216,8 +283,17 @@ uint16_t dal_get_air_volume()
 }
 
 // --------------------------------------------------------------------------
-void dal_add_air_volume_in_Millilitres(uint32_t vol)
+void dal_add_air_volume_in_Millilitres(uint32_t vol_delta)
 {
+#ifdef DISPLAY_DEBUG
+  {
+    char msg[32];
+    static uint32_t total_vol=0;
+    total_vol += vol_delta;
+    sprintf(&msg[0], "vol: %4u", total_vol);
+    BSP_GraphLCD_String(0, (const char *)&msg);
+  }
+#endif
 }
 // --------------------------------------------------------------------------
 void dal_set_debug(uint8_t val)

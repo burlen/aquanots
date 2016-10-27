@@ -1234,6 +1234,12 @@
     <name>$PROJ_DIR$\data_access_layer.h</name>
   </file>
   <file>
+    <name>$PROJ_DIR$\display.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\display.h</name>
+  </file> 
+  <file>  
     <name>$PROJ_DIR$\gui.c</name>
   </file>
   <file>
