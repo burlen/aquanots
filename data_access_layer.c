@@ -243,7 +243,6 @@ const char *dal_get_brand_name()
 // --------------------------------------------------------------------------
 void dal_set_depth_rate(int16_t val)
 {
-#define DISPLAY_DEBUG
 #ifdef DISPLAY_DEBUG
   {
     char msg[32];
