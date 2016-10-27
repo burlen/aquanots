@@ -30,10 +30,10 @@ air_consumption (void * p_arg)
   
   depth = dal_get_depth();
   volume = dal_get_air_volume();
-  
+
   for (;;)
   {
-    if (depth = 0)
+    if (depth == 0)
     {
       // No air is consumed.
 
@@ -42,7 +42,15 @@ air_consumption (void * p_arg)
     {
       // Air is consumed based on depth.
       //output of cL converted to mL adding to previous 
-      volume = volume - 10*gas_rate_in_cl(depth); 
+      if (volume > 10*gas_rate_in_cl(depth))
+      {
+        volume = volume - 10*gas_rate_in_cl(depth); 
+      }
+      else
+      {
+        volume = 0;
+      }
+                
 	  dal_set_air_volume(volume);
     }
     else
@@ -50,6 +58,7 @@ air_consumption (void * p_arg)
       //You've got a problem if you got here.
       assert(0);
     }
+
     //2Hz calc rate
     OSTimeDlyHMSM(0, 0, 0, 500, OS_OPT_TIME_HMSM_STRICT, &err);
   }

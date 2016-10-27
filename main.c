@@ -226,37 +226,7 @@ startup_task (void * p_arg)
     
     //End of Robert's section
     
-    OSTaskCreate((OS_TCB     *)&g_led5_tcb,
-                 (CPU_CHAR   *)"LED5 Task",
-                 (OS_TASK_PTR ) led5_task,
-                 (void       *) 0,
-                 (OS_PRIO     ) LED5_PRIO,
-                 (CPU_STK    *)&g_led5_stack[0],
-                 (CPU_STK_SIZE) TASK_STACK_SIZE / 10u,
-                 (CPU_STK_SIZE) TASK_STACK_SIZE ,
-                 (OS_MSG_QTY  ) 0u,
-                 (OS_TICK     ) 0u,
-                 (void       *) 0,
-                 (OS_OPT      ) 0,
-                 (OS_ERR     *)&err);
-    assert(OS_ERR_NONE == err);
-
-    OSTaskCreate((OS_TCB     *)&g_led7_tcb,
-                 (CPU_CHAR   *)"LED7 Task",
-                 (OS_TASK_PTR ) led7_task,
-                 (void       *) 0,
-                 (OS_PRIO     ) LED7_PRIO,
-                 (CPU_STK    *)&g_led7_stack[0],
-                 (CPU_STK_SIZE) TASK_STACK_SIZE / 10u,
-                 (CPU_STK_SIZE) TASK_STACK_SIZE ,
-                 (OS_MSG_QTY  ) 0u,
-                 (OS_TICK     ) 0u,
-                 (void       *) 0,
-                 (OS_OPT      ) 0,
-                 (OS_ERR     *)&err);
-    assert(OS_ERR_NONE == err);
-
-    OSTaskCreate((OS_TCB     *)&g_debounce_tcb,
+       OSTaskCreate((OS_TCB     *)&g_debounce_tcb,
                  (CPU_CHAR   *)"Debounce Task",
                  (OS_TASK_PTR ) debounce_task,
                  (void       *) 0,

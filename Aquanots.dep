@@ -1028,7 +1028,7 @@
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 41 51 175 164 180 174 82 199 181 90 178 159 191 27 7 2 56 8 23 78 15 4 11 65 42 25 221 211 219 212 155 217 204 21 59</file>
+          <file> 41 51 175 164 180 174 82 199 181 90 178 159 191 27 7 2 56 8 23 78 15 4 11 65 42 25 221 211 219 212 155 21 217 204 59</file>
         </tool>
       </inputs>
     </file>
@@ -1225,6 +1225,10 @@
           <name>ICCRX</name>
           <file> 51 7 2 41 56 8 21 202</file>
         </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 51 7 2 41 56 8 21 202</file>
+        </tool>
       </inputs>
     </file>
     <file>
@@ -1265,10 +1269,6 @@
       <inputs>
         <tool>
           <name>ICCRX</name>
-          <file> 202 206 211 219 212 155 164 180 174 82 199 181 90</file>
-        </tool>
-        <tool>
-          <name>BICOMP</name>
           <file> 202 206 211 219 212 155 164 180 174 82 199 181 90</file>
         </tool>
       </inputs>
