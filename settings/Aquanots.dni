@@ -158,7 +158,7 @@ DebugFlags=0,0
 EmulatorMode=0
 NeedInit=0
 [DebugChecksum]
-Checksum=-1886112654
+Checksum=1405358454
 [CallStack]
 ShowArgs=0
 [Disassembly]
