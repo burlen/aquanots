@@ -183,7 +183,7 @@ void dal_set_ ## var_name (var_type val)                            \
                                                                     \
     /* set the value  */                                            \
     dal-> ## var_name = val;                                        \
-    printf("dal_set_" # var_name "(%d)\n", (int)val);               \
+    /*printf("dal_set_" # var_name "(%d)\n", (int)val); */              \
                                                                     \
     /* signal the update */                                         \
     dal_signal_update(&dal->any_sem);                               \
@@ -203,7 +203,7 @@ var_type dal_get_ ## var_name ()                                    \
                                                                     \
     /* get the value */                                             \
     var_type val = dal-> ## var_name;                               \
-    printf("dal_get_" # var_name "(%d)\n", (int)val);               \
+    /*printf("dal_get_" # var_name "(%d)\n", (int)val); */              \
                                                                     \
     /* release the mutex */                                         \
     dal_mutex_release(&dal-> ## var_name ## _mut);                  \

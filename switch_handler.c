@@ -9,8 +9,6 @@
 #include  "pushbutton.h"
 #include "data_access_layer.h"
 
-static uint8_t unitsToggle = DAL_UNITS_METRIC;
-
 // Handles switch 1 press logic
 // Add air to the tank
 void sw1_react_task(void *p_arg)
