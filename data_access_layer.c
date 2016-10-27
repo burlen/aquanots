@@ -158,7 +158,7 @@ void dal_initialize()
     dal_set_units_toggle(0);
     dal_set_depth(0);
     dal_set_depth_rate(0);
-    dal_set_air_volume(0);
+    dal_set_air_volume(50);
     dal_set_brand_name("aquanots");
     dal_set_debug(0);
 }
@@ -183,6 +183,7 @@ void dal_set_ ## var_name (var_type val)                            \
                                                                     \
     /* set the value  */                                            \
     dal-> ## var_name = val;                                        \
+    printf("dal_set_" # var_name "(%d)\n", (int)val);               \
                                                                     \
     /* signal the update */                                         \
     dal_signal_update(&dal->any_sem);                               \
@@ -202,6 +203,7 @@ var_type dal_get_ ## var_name ()                                    \
                                                                     \
     /* get the value */                                             \
     var_type val = dal-> ## var_name;                               \
+    printf("dal_get_" # var_name "(%d)\n", (int)val);               \
                                                                     \
     /* release the mutex */                                         \
     dal_mutex_release(&dal-> ## var_name ## _mut);                  \
