@@ -44,8 +44,6 @@ typedef struct
 }
 data_access_layer_t;
 
-data_access_layer_t *g_dal = NULL;
-
 // constructor
 data_access_layer_t *new_data_access_layer();
 

@@ -1222,6 +1222,9 @@
     <name>$PROJ_DIR$\cpu_cfg.h</name>
   </file>
   <file>
+    <name>$PROJ_DIR$\data_access_layer.c</name>
+  </file>
+  <file>
     <name>$PROJ_DIR$\data_access_layer.h</name>
   </file>
   <file>
