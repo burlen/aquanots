@@ -8,7 +8,7 @@
 #include "switch_handler.h"
 #include  "pushbutton.h"
 
-static uint8_t unitsToggle = UNITS_METRIC;
+static uint8_t unitsToggle = DAL_UNITS_METRIC;
 
 // Handles switch 1 press logic
 // Add air to the tank
@@ -65,11 +65,11 @@ void sw2_react_task(void *p_arg)
       OSSemPend(&g_sw2_sem, 0, OS_OPT_PEND_BLOCKING, 0, &err);
       assert(OS_ERR_NONE == err);
       sw2_counter++;
-      unitsToggle = (unitsToggle==UNITS_METRIC)?UNITS_US:UNITS_METRIC;
+      unitsToggle = (unitsToggle==DAL_UNITS_METRIC)?DAL_UNITS_US:DAL_UNITS_METRIC;
       dal_set_units_toggle((uint8_t) unitsToggle);
 #ifdef DISPLAY_SWITCH
       sprintf(&msg[0], "SW2: %4u", sw2_counter);
-      sprintf(&msg[0], "SW2: %s", (unitsToggle==UNITS_US)?"UNITS_US":"UNITS_METRIC");
+      sprintf(&msg[0], "SW2: %s", (unitsToggle==DAL_UNITS_US)?"DAL_UNITS_US":"DAL_UNITS_METRIC");
       //sprintf(&msg[0], "SW2: %4u", sw2_counter);
       BSP_GraphLCD_String(1, (const char *)&msg);
 #endif
