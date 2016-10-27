@@ -23,7 +23,7 @@ data_access_layer_t;
 data_access_layer *g_dal = NULL;
 
 // constructor
-data_access_layer _t *new_data_access_layer();
+data_access_layer_t *new_data_access_layer();
 
 // destructor
 void free_data_access_layer();
