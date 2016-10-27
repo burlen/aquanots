@@ -29,6 +29,7 @@
 #include  "pushbutton.h"
 #include  "adc.h"
 #include  "alarm.h"
+#include  "switch_handler.h"
 
 /*
 *********************************************************************************************************
@@ -123,46 +124,6 @@ void led_toggle(uint8_t led, uint16_t period)
       BSP_LED_Toggle(led);
       OSMutexPost(&g_led_mutex, OS_OPT_POST_NONE, &err);
       OSTimeDlyHMSM(0, 0, 0, period, OS_OPT_TIME_HMSM_STRICT, &err);
-}
-
-void sw1_react_task(void *p_arg)
-{
-    OS_ERR  err;
-    char msg[32];
-    uint32_t sw1_counter=0;
-
-    (void)p_arg;    // NOTE: Silence compiler warning about unused param.
-
-    sprintf(&msg[0], "SW1: %4u", sw1_counter);
-    BSP_GraphLCD_String(0, (const char *)&msg);
-    for (;;)
-    {
-      OSSemPend(&g_sw1_sem, 0, OS_OPT_PEND_BLOCKING, 0, &err);
-      assert(OS_ERR_NONE == err);
-      sw1_counter++;
-      sprintf(&msg[0], "SW1: %4u", sw1_counter);
-      BSP_GraphLCD_String(0, (const char *)&msg);
-    }
-}
-
-void sw2_react_task(void *p_arg)
-{
-    OS_ERR  err;
-    char msg[32];
-    uint32_t sw2_counter=0;
-
-    (void)p_arg;    // NOTE: Silence compiler warning about unused param.
-
-    sprintf(&msg[0], "SW2: %4u", sw2_counter);
-    BSP_GraphLCD_String(1, (const char *)&msg);
-    for (;;)
-    {
-      OSSemPend(&g_sw2_sem, 0, OS_OPT_PEND_BLOCKING, 0, &err);
-      assert(OS_ERR_NONE == err);
-      sw2_counter++;
-      sprintf(&msg[0], "SW2: %4u", sw2_counter);
-      BSP_GraphLCD_String(1, (const char *)&msg);
-    }
 }
 
 void
