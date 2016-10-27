@@ -7,6 +7,7 @@
 #include  <os.h>
 #include  <bsp_glcd.h>
 
+#include "bsp_led.h"
 #include  "bsp.h"
 #include  "bsp_int_vect_tbl.h"
 #include  "bsp_led.h"
@@ -18,7 +19,7 @@
 *
 */
 void
-heartbeat (void * p_arg)
+heartbeat_LED (void * p_arg)
 {
     OS_ERR  err;
 
@@ -28,7 +29,7 @@ heartbeat (void * p_arg)
     for (;;)
     {
         // Flash LED at 3 Hz.
-	protectedLED_Toggle(6);
+	BSP_LED_Toggle(6);
 	OSTimeDlyHMSM(0, 0, 0, 167, OS_OPT_TIME_HMSM_STRICT, &err);
     }
 }

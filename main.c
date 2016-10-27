@@ -31,6 +31,8 @@
 #include  "alarm.h"
 #include  "switch_handler.h"
 
+#include "consumption.h"
+#include "heartbeat.h"
 // TODO -- this is just for testing and is not needed
 #include "data_access_layer.h"
 
@@ -102,7 +104,7 @@ static OS_TCB   g_sw2_react_tcb;
 static OS_TCB   g_adc_tcb;
 static OS_TCB   g_alarm_tcb;
 static OS_TCB   g_heartbeat_tcb;  //added by Robert
-statis OS_TCB   g_consumption_tcb; //Added by Robert
+static OS_TCB   g_consumption_tcb; //Added by Robert
 
 // Mutex
 static OS_MUTEX g_led_mutex;
@@ -194,7 +196,7 @@ startup_task (void * p_arg)
     //Robert added this code here
     OSTaskCreate((OS_TCB     *)&g_heartbeat_tcb,
                  (CPU_CHAR   *)"Heartbeat Task",
-                 (OS_TASK_PTR ) heartbeat,
+                 (OS_TASK_PTR ) heartbeat_LED,
                  (void       *) 0,
                  (OS_PRIO     ) HEART_PRIO,
                  (CPU_STK    *)&g_heartbeat_stack[0],
