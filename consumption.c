@@ -13,6 +13,8 @@
 #include  "os_app_hooks.h"
 #include  "scuba.h"
 #include "data_access_layer.h"
+#include "alarm.h"
+
 /*!
 *
 * @brief Tank volume calculator
@@ -58,7 +60,22 @@ air_consumption (void * p_arg)
       //You've got a problem if you got here.
       assert(0);
     }
-
+    
+    uint16_t max_air_depth;
+    //Get max 
+    max_air_depth = dal_get_tick();//gas_to_surface_in_cl(depth);
+    
+    if (depth > max_air_depth)
+    {
+      //Trigger high alarm
+      OSFlagPost(&g_alarm_flags,
+                 ALARM_HIGH,
+                 OS_OPT_POST_FLAG_SET,
+                 &err);
+          assert(OS_ERR_NONE == err);
+    }
+    
+    
     //2Hz calc rate
     OSTimeDlyHMSM(0, 0, 0, 500, OS_OPT_TIME_HMSM_STRICT, &err);
   }
