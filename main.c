@@ -74,6 +74,9 @@ void led_toggle(uint8_t led, uint16_t period);
 #define  ADC_PRIO              12   // 
 #define  ALARM_PRIO            14
 
+#define  HEART_PRIO             9       //Needs to be modified
+#define  CONS_PRIO              9       //Needs to be modified
+
 // Allocate Task Stacks
 #define  TASK_STACK_SIZE      128
 #define  MAX_ADC_Q_SIZE       128
@@ -86,6 +89,8 @@ static CPU_STK  g_sw1_react_stack[TASK_STACK_SIZE];
 static CPU_STK  g_sw2_react_stack[TASK_STACK_SIZE];
 static CPU_STK  g_adc_stack[TASK_STACK_SIZE];
 static CPU_STK  g_alarm_stack[TASK_STACK_SIZE];
+static CPU_STK  g_heartbeat_stack[TASK_STACK_SIZE];
+static CPU_STK  g_consumption_stack[TASK_STACK_SIZE];
 
 // Allocate Task Control Blocks
 static OS_TCB   g_startup_task_tcb;
@@ -96,6 +101,8 @@ static OS_TCB   g_sw1_react_tcb;
 static OS_TCB   g_sw2_react_tcb;
 static OS_TCB   g_adc_tcb;
 static OS_TCB   g_alarm_tcb;
+static OS_TCB   g_heartbeat_tcb;  //added by Robert
+statis OS_TCB   g_consumption_tcb; //Added by Robert
 
 // Mutex
 static OS_MUTEX g_led_mutex;
@@ -183,6 +190,39 @@ startup_task (void * p_arg)
     CPU_Init();
     Mem_Init();
     BSP_GraphLCD_SetFont(GLYPH_FONT_8_BY_8);
+    
+    //Robert added this code here
+    OSTaskCreate((OS_TCB     *)&g_heartbeat_tcb,
+                 (CPU_CHAR   *)"Heartbeat Task",
+                 (OS_TASK_PTR ) heartbeat,
+                 (void       *) 0,
+                 (OS_PRIO     ) HEART_PRIO,
+                 (CPU_STK    *)&g_heartbeat_stack[0],
+                 (CPU_STK_SIZE) TASK_STACK_SIZE / 10u,
+                 (CPU_STK_SIZE) TASK_STACK_SIZE ,
+                 (OS_MSG_QTY  ) 0u,
+                 (OS_TICK     ) 0u,
+                 (void       *) 0,
+                 (OS_OPT      ) 0,
+                 (OS_ERR     *)&err);
+    assert(OS_ERR_NONE == err);
+    
+        OSTaskCreate((OS_TCB     *)&g_consumption_tcb,
+                 (CPU_CHAR   *)"Consumption Task",
+                 (OS_TASK_PTR ) air_consumption,
+                 (void       *) 0,
+                 (OS_PRIO     ) CONS_PRIO,
+                 (CPU_STK    *)&g_consumption_stack[0],
+                 (CPU_STK_SIZE) TASK_STACK_SIZE / 10u,
+                 (CPU_STK_SIZE) TASK_STACK_SIZE ,
+                 (OS_MSG_QTY  ) 0u,
+                 (OS_TICK     ) 0u,
+                 (void       *) 0,
+                 (OS_OPT      ) 0,
+                 (OS_ERR     *)&err);
+    assert(OS_ERR_NONE == err);
+    
+    //End of Robert's section
     
     OSTaskCreate((OS_TCB     *)&g_led5_tcb,
                  (CPU_CHAR   *)"LED5 Task",
