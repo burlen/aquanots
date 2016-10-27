@@ -44,7 +44,7 @@ typedef struct
 }
 data_access_layer_t;
 
-data_access_layer *g_dal = NULL;
+
 typedef enum
 {
   UNITS_METRIC=0,
@@ -52,7 +52,6 @@ typedef enum
 }
 units_toggle_t;
 
-data_access_layer_t *g_dal = NULL;
 
 // constructor
 data_access_layer_t *new_data_access_layer();
