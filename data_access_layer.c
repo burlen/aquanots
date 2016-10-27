@@ -29,15 +29,15 @@ typedef struct
     OS_MUTEX depth_mut;
     OS_SEM depth_sem;
 
-    uint16_t depth_rate;
+    int16_t depth_rate;
     OS_MUTEX depth_rate_mut;
     OS_SEM depth_rate_sem;
 
-    uint16_t air_volume;
+    uint32_t air_volume;
     OS_MUTEX air_volume_mut;
     OS_SEM air_volume_sem;
 
-    const char *brand_name;
+    char *brand_name;
     OS_MUTEX brand_name_mut;
     OS_SEM brand_name_sem;
 
@@ -81,7 +81,6 @@ int dal_mutex_release(OS_MUTEX *mut)
     assert(OS_ERR_NONE == err);
     return 0;
 }
-
 
 // --------------------------------------------------------------------------
 int dal_mutex_create(OS_MUTEX *mut, const char *name)
@@ -169,141 +168,103 @@ void dal_reset()
 { dal_initialize(); }
 
 // --------------------------------------------------------------------------
-void dal_set_tick(uint32_t val)
+
+#define dal_set_get_impl(var_name, var_type)                        \
+dal_set_impl(var_name, var_type)                                    \
+dal_get_impol(var_name, var_type)
+
+#define  dal_set_impl(var_name, var_type)                           \
+void dal_set_ ## var_name (var_type val)                            \
+{                                                                   \
+    data_access_layer_t *dal = g_dal;                               \
+                                                                    \
+    /* aquire the mutex */                                          \
+    dal_mutex_aquire(&dal-> ## var_name ## _mut);                   \
+                                                                    \
+    /* set the value  */                                            \
+    dal-> ## var_name = val;                                        \
+                                                                    \
+    /* signal the update */                                         \
+    dal_signal_update(&dal->any_sem);                               \
+    dal_signal_update(&dal-> ## var_name ## _sem);                  \
+                                                                    \
+    /* release the mutex */                                         \
+    dal_mutex_release(&dal-> ## var_name ## _mut);                  \
+}
+
+#define  dal_get_impl(var_name, var_type)                           \
+var_type dal_get_ ## var_name ()                                    \
+{                                                                   \
+    data_access_layer_t *dal = g_dal;                               \
+                                                                    \
+    /* aquire the mutex */                                          \
+    dal_mutex_aquire(&dal-> ## var_name ## _mut);                   \
+                                                                    \
+    /* get the value */                                             \
+    var_type val = dal-> ## var_name;                               \
+                                                                    \
+    /* release the mutex */                                         \
+    dal_mutex_release(&dal-> ## var_name ## _mut);                  \
+                                                                    \
+    return val;                                                     \
+}
+
+dal_set_impl(tick, uint32_t);
+dal_set_impl(alarm, uint8_t);
+dal_set_impl(units_toggle, uint8_t);
+dal_set_impl(depth_rate, int16_t);
+dal_set_impl(depth, uint32_t);
+dal_set_impl(debug, uint8_t);
+dal_set_impl(air_volume, uint32_t);
+
+dal_get_impl(tick, uint32_t);
+dal_get_impl(alarm, uint8_t);
+dal_get_impl(units_toggle, uint8_t);
+dal_get_impl(depth_rate, int16_t);
+dal_get_impl(depth, uint32_t);
+dal_get_impl(air_volume, uint32_t);
+dal_get_impl(brand_name, char *);
+dal_get_impl(debug, uint8_t);
+
+// --------------------------------------------------------------------------
+void dal_set_brand_name(char *val)
 {
     data_access_layer_t *dal = g_dal;
 
     // aquire the mutex
-    dal_mutex_aquire(&dal->tick_mut);
+    dal_mutex_aquire(&dal->brand_name_mut);
+
+    // if there was already something free it
+    // no leaks
+    if (dal->brand_name)
+        free(dal->brand_name);
 
     // set the value
-    dal->tick = val;
+    dal->brand_name = strdup(val);
 
     // signal the update
     dal_signal_update(&dal->any_sem);
-    dal_signal_update(&dal->tick_sem);
+    dal_signal_update(&dal->brand_name_sem);
 
     // release the mutex
-    dal_mutex_release(&dal->tick_mut);
+    dal_mutex_release(&dal->brand_name_mut);
 }
 
 // --------------------------------------------------------------------------
-uint32_t dal_get_tick()
+void dal_add_air_volume(uint32_t val)
 {
     data_access_layer_t *dal = g_dal;
 
-    // aquire the mutex
-    dal_mutex_aquire(&dal->tick_mut);
+    /* aquire the mutex */
+    dal_mutex_aquire(&dal->air_volume_mut);
 
-    // get the value
-    uint32_t val = dal->tick;
+    /* set the value  */
+    dal->air_volume += val;
 
-    // release the mutex
-    dal_mutex_release(&dal->tick_mut);
+    /* signal the update */
+    dal_signal_update(&dal->any_sem);
+    dal_signal_update(&dal->air_volume_sem);
 
-    return val;
+    /* release the mutex */
+    dal_mutex_release(&dal->air_volume_mut);
 }
-
-// --------------------------------------------------------------------------
-void dal_set_alarm(uint8_t val)
-{
-}
-
-// --------------------------------------------------------------------------
-uint8_t dal_get_alarm(void)
-{
-    return  0;
-}
-
-
-// --------------------------------------------------------------------------
-void dal_set_units_toggle(uint8_t val)
-{
-}
-
-// --------------------------------------------------------------------------
-uint8_t dal_get_units_toggle()
-{
-    return 0;
-}
-
-
-// --------------------------------------------------------------------------
-void dal_set_brand_name(const char *vakl)
-{
-}
-
-// --------------------------------------------------------------------------
-const char *dal_get_brand_name()
-{
-    return "";
-}
-
-
-// --------------------------------------------------------------------------
-void dal_set_depth_rate(int16_t val)
-{
-#ifdef DISPLAY_DEBUG
-  {
-    char msg[32];
-    sprintf(&msg[0], "depth: %4i", val);
-    BSP_GraphLCD_String(0, (const char *)&msg);
-  }
-#endif
-}
-
-
-// --------------------------------------------------------------------------
-int16_t dal_get_depth_rate()
-{
-    return 0;
-}
-
-
-// --------------------------------------------------------------------------
-void dal_set_depth(uint32_t val)
-{
-}
-
-// --------------------------------------------------------------------------
-uint32_t dal_get_depth()
-{
-    return 0;
-}
-
-// --------------------------------------------------------------------------
-void dal_set_air_volume(uint16_t val)
-{
-}
-
-// --------------------------------------------------------------------------
-uint16_t dal_get_air_volume()
-{
-    return 0;
-}
-
-// --------------------------------------------------------------------------
-void dal_add_air_volume_in_Millilitres(uint32_t vol_delta)
-{
-#ifdef DISPLAY_DEBUG
-  {
-    char msg[32];
-    static uint32_t total_vol=0;
-    total_vol += vol_delta;
-    sprintf(&msg[0], "vol: %4u", total_vol);
-    BSP_GraphLCD_String(0, (const char *)&msg);
-  }
-#endif
-}
-// --------------------------------------------------------------------------
-void dal_set_debug(uint8_t val)
-{
-}
-
-// --------------------------------------------------------------------------
-uint8_t dal_get_debug()
-{
-    return 0;
-}
-
-
