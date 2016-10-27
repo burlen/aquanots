@@ -21,6 +21,8 @@
 *
 */
 
+#define CL_TO_ML (10)
+#define SURFACE (0)
 void
 air_consumption (void * p_arg)
 {
@@ -36,18 +38,18 @@ air_consumption (void * p_arg)
     depth = dal_get_depth();
     volume = dal_get_air_volume();
     
-    if (depth == 0)
+    if (depth == SURFACE)
     {
       // No air is consumed.
 
     }
-    else if (depth > 0)
+    else if (depth > SURFACE)
     {
       // Air is consumed based on depth.
       //output of cL converted to mL adding to previous 
-      if (volume > 10*gas_rate_in_cl(depth))
+      if (volume > CL_TO_ML*gas_rate_in_cl(depth))
       {
-        volume = volume - 10*gas_rate_in_cl(depth); 
+        volume = volume - CL_TO_ML*gas_rate_in_cl(depth); 
       }
       else
       {
