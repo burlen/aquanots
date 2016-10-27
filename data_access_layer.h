@@ -54,8 +54,8 @@ void dal_set_depth_rate(int16_t val);
 int16_t dal_get_depth_rate();
 
 // set/get the depth rate
-void dal_set_depth(uint16_t val);
-uint16_t dal_get_depth();
+void dal_set_depth(uint32_t val);
+uint32_t dal_get_depth();
 
 // set/get the current air volume
 void dal_set_air_volume(uint16_t val);
