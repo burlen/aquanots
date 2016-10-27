@@ -65,6 +65,7 @@ void sw2_react_task(void *p_arg)
       OSSemPend(&g_sw2_sem, 0, OS_OPT_PEND_BLOCKING, 0, &err);
       assert(OS_ERR_NONE == err);
       sw2_counter++;
+      uint8_t unitsToggle = dal_get_units_toggle();
       unitsToggle = (unitsToggle==DAL_UNITS_METRIC)?DAL_UNITS_US:DAL_UNITS_METRIC;
       dal_set_units_toggle((uint8_t) unitsToggle);
 #ifdef DISPLAY_SWITCH
