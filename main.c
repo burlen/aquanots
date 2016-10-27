@@ -153,6 +153,7 @@ startup_task (void * p_arg)
     dal_reset();
     
 
+
     gui_display_msg_on_line(6,"Hello1");
     gui_display_status_msg("Hello2");
     gui_display_brand();
