@@ -31,6 +31,10 @@
 #include  "alarm.h"
 #include  "switch_handler.h"
 
+// TODO -- this is just for testing and is not needed
+#include "data_access_layer.h"
+
+
 /*
 *********************************************************************************************************
 *                                            LOCAL DEFINES
