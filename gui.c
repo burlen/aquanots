@@ -7,12 +7,23 @@
 
 #include "adc.h"
 #include  <bsp_glcd.h>
+#include "data_access_layer.h"
 
 
-#define DISPLAY_WIDTH 19;
-#define DISPLAY_HEIGHT 7;
+#define DISPLAY_WIDTH 19
+#define DISPLAY_HEIGHT 7
 
-char g_display_matrix[8][20];
+#define LINE_BRAND 0
+
+#define LINE_DEPTH 2
+#define LINE_RATE 3
+#define LINE_AIR_VOL 4
+#define LINE_ELAPSED_DIVE_TIME 5
+#define LINE_HIGH_ALARM 7
+
+
+static char BLANK_LINE[20] = "                    ";
+
 
 // Display the msg
 void gui_display_msg_on_line(uint8_t a_line_number, char* a_msg)
@@ -36,7 +47,7 @@ void gui_clear_line(uint8_t a_line_number)
   
   for(int i = 0; i < n; i++)
   {
-     g_display_matrix[a_line_number][i] = NULL;
+     gui_display_msg_on_line(i, BLANK_LINE);
   }
 }
 
@@ -59,11 +70,22 @@ void gui_display_brand(void)
 
 // Displays current depth.
 void gui_display_current_depth(void)
-  {}
+{
+  
+}
 
 // display current depth.
 void gui_display_depth_rate(void)
-{}
+{
+  int16_t rate = dal_get_depth_rate();
+  
+  char msg[DISPLAY_WIDTH];
+  
+  sprintf("DEPTH: %u", msg, rate);
+  gui_display_msg_on_line(LINE_RATE, msg);
+  
+}
+
 
 // display elapsed time;
 void gui_display_elapsed_time(void)

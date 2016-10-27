@@ -150,6 +150,7 @@ startup_task (void * p_arg)
     gui_display_msg_on_line(6,"Hello1");
     gui_display_status_msg("Hello2");
     gui_display_brand();
+    gui_display_depth_rate();
     
     OSTaskCreate((OS_TCB     *)&g_heartbeat_tcb,
                  (CPU_CHAR   *)"Heartbeat Task",
