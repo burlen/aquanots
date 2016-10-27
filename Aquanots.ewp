@@ -1252,6 +1252,12 @@
     <name>$PROJ_DIR$\pushbutton.h</name>
   </file>
   <file>
+    <name>$PROJ_DIR$\scuba.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\scuba.h</name>
+  </file>
+  <file>
     <name>$PROJ_DIR$\tasks.c</name>
   </file>
 </project>
