@@ -101,7 +101,9 @@ adc_task (void * p_arg)
     OS_MSG_SIZE msgSize;
     void *msgPtr;
     uint16_t adcData=0;
+#ifdef DISPLAY_ADC
     char msg[32];
+#endif
     char alarm='-';
 
 
@@ -115,8 +117,10 @@ adc_task (void * p_arg)
     // Configure ADC hardware to read Potentiometer VR1 and interrupt.
     adc_config();
 	
+#ifdef DISPLAY_ADC
     sprintf(&msg[0], "ADC: %4u", adcData);
     BSP_GraphLCD_String(5, (const char *)&msg);
+#endif
 
     for (;;)	
     {
@@ -157,8 +161,10 @@ adc_task (void * p_arg)
           assert(OS_ERR_NONE == err);
         }
         
+#ifdef DISPLAY_ADC
         sprintf(&msg[0], "ADC: %4u, %c", adcData, alarm);
         BSP_GraphLCD_String(5, (const char *)&msg);        
+#endif
     }
 }
 
