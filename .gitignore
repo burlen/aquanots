@@ -2,5 +2,8 @@
 *.bin
 Debug
 settings/Aquanots.dni
-*.dep
+
+## Don't ignore these files, they track the files in the project. 
+#*.dep
+
 settings/Aquanots.Debug.cspy.bat
