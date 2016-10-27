@@ -12,7 +12,7 @@
 typedef struct
 {
     OS_SEM any_sem;
-    OS_MUTEX all_mutex;
+    OS_MUTEX all_mut;
 
     uint32_t tick;
     OS_MUTEX tick_mut;
@@ -23,12 +23,16 @@ typedef struct
     OS_SEM alarm_sem;
 
     uint8_t units_toggle;
-    OS_MUTEX units_mut;
-    OS_SEM units_sem;
+    OS_MUTEX units_toggle_mut;
+    OS_SEM units_toggle_sem;
 
-    uint16_t depth;
+    uint32_t depth;
     OS_MUTEX depth_mut;
     OS_SEM depth_sem;
+
+    uint16_t depth_rate;
+    OS_MUTEX depth_rate_mut;
+    OS_SEM depth_rate_sem;
 
     uint16_t air_volume;
     OS_MUTEX air_volume_mut;
@@ -79,8 +83,8 @@ uint8_t dal_get_alarm(void);
 int wait_alarm_changed();
 
 // set/get the units
-#define UNITS_METRIC 0x01
-#define UNITS_US     0x02
+#define DAL_UNITS_METRIC 0x01
+#define DAL_UNITS_US     0x02
 void dal_set_units_toggle(uint8_t val);
 uint8_t dal_get_units_toggle();
 // block unit the value has changed, return 0 on success
