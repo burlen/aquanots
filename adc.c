@@ -106,8 +106,6 @@ adc_task (void * p_arg)
 #ifdef DISPLAY_ADC
     char msg[32];
 #endif
-    char alarm='-';
-
     //char alarm='-';
     int16_t depth_rate;
 

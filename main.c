@@ -89,8 +89,6 @@ void led_toggle(uint8_t led, uint16_t period);
 #define  MAX_ADC_Q_SIZE       128
 
 static CPU_STK  g_startup_task_stack[TASK_STACK_SIZE];
-static CPU_STK  g_led5_stack[TASK_STACK_SIZE];
-static CPU_STK  g_led7_stack[TASK_STACK_SIZE];
 static CPU_STK  g_debounce_stack[TASK_STACK_SIZE];
 static CPU_STK  g_sw1_react_stack[TASK_STACK_SIZE];
 static CPU_STK  g_sw2_react_stack[TASK_STACK_SIZE];
@@ -103,8 +101,6 @@ static CPU_STK  g_display_stack[TASK_STACK_SIZE];
 
 // Allocate Task Control Blocks
 static OS_TCB   g_startup_task_tcb;
-static OS_TCB   g_led5_tcb;
-static OS_TCB   g_led7_tcb;
 static OS_TCB   g_debounce_tcb;
 static OS_TCB   g_sw1_react_tcb;
 static OS_TCB   g_sw2_react_tcb;
