@@ -23,6 +23,8 @@
 
 #define CL_TO_ML (10)
 #define SURFACE (0)
+#define M_PER_MIN_TO_MM1 (50)
+#define M_PER_MIN_TO_MM2 (6)
 void
 air_consumption (void * p_arg)
 {
@@ -32,11 +34,15 @@ air_consumption (void * p_arg)
   
     for (;;)
   {
-    uint16_t depth;
+    uint32_t depth;
     uint16_t volume;
+    int16_t rate;
     
     depth = dal_get_depth();
     volume = dal_get_air_volume();
+    rate = dal_get_depth_rate();
+    
+    
     
     if (depth == SURFACE)
     {
@@ -61,6 +67,19 @@ air_consumption (void * p_arg)
     {
       //You've got a problem if you got here.
       assert(0);
+    }
+    
+    if (rate != 0)
+    {
+      if ((depth + rate * M_PER_MIN_TO_MM1 / M_PER_MIN_TO_MM2) < 0)
+      {
+        depth = 0;
+      }
+      else
+      {
+      depth = depth + rate * M_PER_MIN_TO_MM1 / M_PER_MIN_TO_MM2;
+      }      
+      dal_set_depth(depth);
     }
     
     uint16_t min_air_vol;
