@@ -1,4 +1,5 @@
 #include "data_access_layer.h"
+#include  <bsp_glcd.h> // for LCD
 
 #include <stdlib.h>
 
@@ -74,6 +75,14 @@ const char *dal_get_brand_name()
 // --------------------------------------------------------------------------
 void dal_set_depth_rate(int16_t val)
 {
+#define DISPLAY_DEBUG
+#ifdef DISPLAY_DEBUG
+  {
+    char msg[32];
+    sprintf(&msg[0], "depth: %4i", val);
+    BSP_GraphLCD_String(0, (const char *)&msg);
+  }
+#endif
 }
 
 
@@ -108,7 +117,17 @@ uint16_t dal_get_air_volume()
 
 // --------------------------------------------------------------------------
 void dal_add_air_volume_in_Millilitres(uint32_t vol)
+void dal_add_air_volume_in_Millilitres(uint32_t vol_delta)
 {
+#ifdef DISPLAY_DEBUG
+  {
+    char msg[32];
+    static uint32_t total_vol=0;
+    total_vol += vol_delta;
+    sprintf(&msg[0], "vol: %4u", total_vol);
+    BSP_GraphLCD_String(0, (const char *)&msg);
+  }
+#endif
 }
 // --------------------------------------------------------------------------
 void dal_set_debug(uint8_t val)

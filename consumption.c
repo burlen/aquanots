@@ -34,6 +34,7 @@ air_consumption (void * p_arg)
   for (;;)
   {
     if (depth = 0)
+    if (0 == depth)
     {
       // No air is consumed.
 

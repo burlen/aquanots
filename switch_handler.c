@@ -35,6 +35,7 @@ void sw1_react_task(void *p_arg)
       if(dal_get_depth() == 0)
       {
         dal_add_air_volume_in_Millilitres(0);
+        dal_add_air_volume_in_Millilitres(VOLUME_PER_CLICK_IN_MILLILITRES);
       }
 #ifdef DISPLAY_SWITCH
       sprintf(&msg[0], "SW1: %4u", sw1_counter);

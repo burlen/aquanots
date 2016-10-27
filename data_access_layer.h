@@ -7,6 +7,9 @@
 
 #include <os.h>
 
+#define DANGEROUS_ASCENT_RATE_M_MIN (15)
+#define VOLUME_PER_CLICK_IN_MILLILITRES (5000)
+
 // structure for shared data, a singleton instance, and
 // set/get api
 typedef struct
@@ -93,6 +96,7 @@ const char *dal_get_brand_name();
 
 // set/get the depth rate
 // values are in units of meters/min
+// values are in units of +/- meters/min
 void dal_set_depth_rate(int16_t val);
 int16_t dal_get_depth_rate();
 // block unit the value has changed, return 0 on success
@@ -115,6 +119,7 @@ void dal_set_air_volume(uint16_t val);
 // -1 on error
 uint16_t dal_get_air_volume();
 void dal_add_air_volume_in_Millilitres(uint32_t volume);
+void dal_add_air_volume_in_Millilitres(uint32_t total_vol);
 
 // block unit the value has changed, return 0 on success
 // -1 on error

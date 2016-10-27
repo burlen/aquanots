@@ -17,6 +17,8 @@
 #include "adc.h"
 #include  <bsp_glcd.h>
 #include "alarm.h"
+#include "data_access_layer.h"
+#include "scuba.h"
 
 // Message Queue for ISR->Task Communication
 static OS_Q  g_adc_q;
@@ -106,6 +108,8 @@ adc_task (void * p_arg)
 #endif
     char alarm='-';
 
+    //char alarm='-';
+    int16_t depth_rate;
 
     (void)p_arg;    // NOTE: Silence compiler warning about unused param.
 
@@ -136,6 +140,20 @@ adc_task (void * p_arg)
         assert(OS_ERR_NONE == err);
         adcData = (uint16_t)msgPtr;
         
+        depth_rate = ADC2RATE(adcData);
+        dal_set_depth_rate(depth_rate);
+      
+        if(depth_rate > DANGEROUS_ASCENT_RATE_M_MIN)
+        {
+          OSFlagPost(&g_alarm_flags, ALARM_MEDIUM, OS_OPT_POST_FLAG_SET, &err);
+          assert(OS_ERR_NONE == err);
+        }
+        else
+        {
+          OSFlagPost(&g_alarm_flags, ALARM_NONE, OS_OPT_POST_FLAG_SET, &err);
+          assert(OS_ERR_NONE == err);
+        }
+#if 0
         if(adcData == 0)
         { // No Alarm
           alarm= '-';
@@ -160,6 +178,7 @@ adc_task (void * p_arg)
           OSFlagPost(&g_alarm_flags, ALARM_HIGH, OS_OPT_POST_FLAG_SET, &err);
           assert(OS_ERR_NONE == err);
         }
+#endif
         
 #ifdef DISPLAY_ADC
         sprintf(&msg[0], "ADC: %4u, %c", adcData, alarm);
