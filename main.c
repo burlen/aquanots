@@ -30,6 +30,7 @@
 #include  "adc.h"
 #include  "alarm.h"
 #include  "switch_handler.h"
+#include  "gui.h"
 
 /*
 *********************************************************************************************************
@@ -179,6 +180,11 @@ startup_task (void * p_arg)
     CPU_Init();
     Mem_Init();
     BSP_GraphLCD_SetFont(GLYPH_FONT_8_BY_8);
+    
+    //gui_clear_screen();
+    gui_display_msg_on_line(6,"Hello1");
+    gui_display_status_msg("Hello2");
+    gui_display_brand();
     
     OSTaskCreate((OS_TCB     *)&g_led5_tcb,
                  (CPU_CHAR   *)"LED5 Task",

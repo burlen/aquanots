@@ -1,9 +1,23 @@
-.*
+# Compiled binaries
 *.bin
-Debug
-settings/Aquanots.dni
+*.elf
+*.hex
+*.map
 
-## Don't ignore these files, they track the files in the project. 
-#*.dep
+# Trash
+*.bak
 
-settings/Aquanots.Debug.cspy.bat
+# IAR project "Debug" directory
+Debug/
+
+# IAR project "Release" directory
+Release/
+
+# IAR project settings directory
+settings/
+
+# IAR backup files
+Backup*
+
+# IAR .dep files
+*.dep

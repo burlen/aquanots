@@ -1219,10 +1219,28 @@
     <name>$PROJ_DIR$\bsp_cfg.h</name>
   </file>
   <file>
+    <name>$PROJ_DIR$\consumption.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\consumption.h</name>
+  </file>
+  <file>
     <name>$PROJ_DIR$\cpu_cfg.h</name>
   </file>
   <file>
     <name>$PROJ_DIR$\data_access_layer.h</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\gui.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\gui.h</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\heartbeat.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\heartbeat.h</name>
   </file>
   <file>
     <name>$PROJ_DIR$\interrupts.c</name>

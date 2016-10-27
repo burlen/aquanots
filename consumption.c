@@ -12,7 +12,7 @@
 #include  "bsp_led.h"
 #include  "os_app_hooks.h"
 #include  "scuba.h"
-#include "data_access_layer_h"
+#include "data_access_layer.h"
 /*!
 *
 * @brief Tank volume calculator
@@ -33,7 +33,7 @@ air_consumption (void * p_arg)
   
   for (;;)
   {
-    if (depth = 0)
+    if (depth == 0)
     {
       // No air is consumed.
 
@@ -48,7 +48,7 @@ air_consumption (void * p_arg)
     else
     {
       //You've got a problem if you got here.
-      assert(0)
+      assert(0);
     }
     //2Hz calc rate
     OSTimeDlyHMSM(0, 0, 0, 500, OS_OPT_TIME_HMSM_STRICT, &err);
