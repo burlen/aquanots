@@ -71,30 +71,39 @@ void gui_display_brand(void)
 // Displays current depth.
 void gui_display_current_depth(void)
 {
-  uint32_t depth = dal_get_depth(); // in millimeters
+  float depth = dal_get_depth(); // in millimeters
   uint8_t units = dal_get_units_toggle();
   char msg[DISPLAY_WIDTH];
   if(units == DAL_UNITS_METRIC)
   {
-    depth = depth/1000; // to meters
+    depth = depth/1000.0; // to meters
   }
   else
   {
-    depth = depth*3/1000; // feet
+    depth = depth*0.00328084; // feet
   }
   
-  sprintf(msg, "DEPTH: %4d %s", depth, (units==DAL_UNITS_METRIC)?"M":"FT");
+  sprintf(msg, "DEPTH: %4.2f %s", depth, (units==DAL_UNITS_METRIC)?"M":"FT");
   gui_display_msg_on_line(LINE_DEPTH, msg);
 }
 
 // display current depth.
 void gui_display_depth_rate(void)
 {
-  int16_t rate = dal_get_depth_rate();
+  float rate = dal_get_depth_rate();
+  uint8_t units = dal_get_units_toggle();
   
   char msg[DISPLAY_WIDTH];
+  if(units == DAL_UNITS_METRIC)
+  {
+    rate = rate/1000.0; // to meters
+  }
+  else
+  {
+    rate = rate*0.00328084; // feet
+  }
   
-  sprintf(msg, "RATE: %4d", rate);
+  sprintf(msg, "RATE: %4.2f %s", rate, (units==DAL_UNITS_METRIC)?"M":"FT");
   gui_display_msg_on_line(LINE_RATE, msg);
   
 }
