@@ -21,3 +21,5 @@ Backup*
 
 # IAR .dep files
 *.dep
+
+*.orig
