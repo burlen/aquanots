@@ -24,5 +24,7 @@ display_refresh (void * p_arg)
     
     //10Hz cycle - OS delay
       OSTimeDlyHMSM(0, 0, 0, 100, OS_OPT_TIME_HMSM_STRICT, &err);
+      gui_display_depth_rate();
+      gui_display_current_depth();
   }
 }
