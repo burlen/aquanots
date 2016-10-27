@@ -32,6 +32,7 @@ void free_data_access_layer();
 void dal_reset();
 
 // set/get the clock
+// in units of seconds
 void dal_set_tick(uint32_t tick);
 uint32_t dal_get_tick(void);
 
@@ -50,14 +51,17 @@ void dal_set_brand_name(const char *vakl);
 const char *dal_get_brand_name();
 
 // set/get the depth rate
+// values are in units of meters/min
 void dal_set_depth_rate(int16_t val);
 int16_t dal_get_depth_rate();
 
 // set/get the depth rate
+// values are milimeters
 void dal_set_depth(uint32_t val);
 uint32_t dal_get_depth();
 
 // set/get the current air volume
+// units of millileters
 void dal_set_air_volume(uint16_t val);
 uint16_t dal_get_air_volume();
 
