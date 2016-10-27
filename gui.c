@@ -28,7 +28,7 @@ static char BLANK_LINE[20] = "                    ";
 // Display the msg
 void gui_display_msg_on_line(uint8_t a_line_number, char* a_msg)
 {
-  BSP_GraphLCD_String(a_line_number,(char*) a_msg);
+  BSP_GraphLCD_String(a_line_number, a_msg);
 }
 
 
@@ -89,7 +89,20 @@ void gui_display_depth_rate(void)
 
 // display elapsed time;
 void gui_display_elapsed_time(void)
-  {}
+{
+    // this is in seconds
+    uint32_t tick = dal_get_tick();
+
+    uint32_t hours = tick/3600;
+    uint32_t min = (tick - hours*3600)/60;
+    uint32_t sec = tick - hours*3600 - min*60;
+
+    char buf[32] = {'\0'};
+    snprintf(buf, 32, "EDT : %2u:%02u:%02u", hours, min, sec);
+
+    BSP_GraphLCD_ClrLine(6);
+    BSP_GraphLCD_String(6, buf);
+}
 
 // display alarm status
 void gui_alarm_status(void)
