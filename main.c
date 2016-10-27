@@ -30,6 +30,7 @@
 #include  "adc.h"
 #include  "alarm.h"
 #include  "switch_handler.h"
+#include  "gui.h"
 
 #include "consumption.h"
 #include "heartbeat.h"
@@ -151,6 +152,7 @@ startup_task (void * p_arg)
     BSP_GraphLCD_SetFont(GLYPH_FONT_8_BY_8);
     dal_reset();
     
+
     //Robert added this code here
     OSTaskCreate((OS_TCB     *)&g_heartbeat_tcb,
                  (CPU_CHAR   *)"Heartbeat Task",

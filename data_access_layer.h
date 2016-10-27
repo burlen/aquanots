@@ -7,6 +7,7 @@
 #include <os.h>
 
 #define DANGEROUS_ASCENT_RATE_M_MIN (15)
+data_access_layer *g_dal = NULL;
 #define VOLUME_PER_CLICK_IN_MILLILITRES (5000)
 // initialize the dal
 void dal_intialize();
