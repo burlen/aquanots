@@ -284,7 +284,6 @@ uint16_t dal_get_air_volume()
 }
 
 // --------------------------------------------------------------------------
-void dal_add_air_volume_in_Millilitres(uint32_t vol)
 void dal_add_air_volume_in_Millilitres(uint32_t vol_delta)
 {
 #ifdef DISPLAY_DEBUG
