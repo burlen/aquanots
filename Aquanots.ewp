@@ -1238,6 +1238,12 @@
   </file>
   <file>
     <name>$PROJ_DIR$\display.h</name>
+  </file> 
+  <file>  
+    <name>$PROJ_DIR$\gui.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\gui.h</name>
   </file>
   <file>
     <name>$PROJ_DIR$\heartbeat.c</name>
