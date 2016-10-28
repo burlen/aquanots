@@ -86,11 +86,11 @@ void gui_display_depth_rate(void)
   char msg[DISPLAY_WIDTH];
   if(units == DAL_UNITS_METRIC)
   {
-    rate = rate/1000.0; // to meters
+    rate = rate; // to meters
   }
   else
   {
-    rate = rate*0.00328084; // feet
+    rate = rate*3.28084; // feet
   }
   
   sprintf(msg, "RATE: %4.2f %s", rate, (units==DAL_UNITS_METRIC)?"M":"FT");
