@@ -43,29 +43,19 @@ void gui_display_status_msg(char* a_msg)
 // Clear the line of chara
 void gui_clear_line(uint8_t a_line_number)
 {
-  int n = DISPLAY_WIDTH;
-  
-  for(int i = 0; i < n; i++)
-  {
-     gui_display_msg_on_line(i, BLANK_LINE);
-  }
+  BSP_GraphLCD_ClrLine( a_line_number);
 }
 
 // Clear the entire screen.
 void gui_clear_screen()
 {
-  int n = DISPLAY_HEIGHT;
-  
-  for( int i = 0; i < n; i++)
-  {
-    gui_clear_line(i);
-  }
+  BSP_GraphLCD_Clear();
 }
 
 // Displays brand name.
 void gui_display_brand(void)
 {
-  gui_display_msg_on_line(0, "AQUA NOTS!");
+  gui_display_msg_on_line(LINE_BRAND, "AQUA NOTS!");
 }
 
 // Displays current depth.
@@ -128,12 +118,47 @@ void gui_display_elapsed_time(void)
 
 // display alarm status
 void gui_alarm_status(void)
-  {}
+{
+  uint8_t val = dal_get_alarm(void);
+  gui_clear_line(LINE_HIGH_ALARM);
+  
+  sprintf(msg, "ALARM: %4.2f %s", rate, (units==DAL_UNITS_METRIC)?"M":"FT");
+  
+  
+}
+
 
 // Clears the screen and retrieves all values again.
 // Good for when there is a measurement change.
 void gui_update_screen(void)
-  {}
+ {
+    // Display the msg
+    void gui_display_msg_on_line(uint8_t a_line_number, char* a_msg);
+
+    // Displays the given message.
+    void gui_display_status_msg(char* a_msg);
+
+    // Clear the line of chara
+    void gui_clear_line(uint8_t a_line_number);
+
+    // Clear the entire screen.
+    void gui_clear_screen(void);
+
+    // Displays brand name.
+    void gui_display_brand(void);
+
+    // Displays current depth.
+    void gui_display_current_depth(void);
+
+    // display current depth.
+    void gui_display_depth_rate(void);
+
+    // display elapsed time;
+    void gui_display_elapsed_time(void);
+
+    // display alarm status
+    void gui_alarm_status(void);
+ }
   
 
 

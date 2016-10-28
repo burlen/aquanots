@@ -16,6 +16,8 @@ display_refresh (void * p_arg)
   
   OS_ERR	    err;
   
+
+      
   //Initialize some stuff here
   
   for (;;)	
